@@ -1,81 +1,62 @@
-'use client';
+const stats = [
+  ['Students', '1,240'],
+  ['Teachers', '96'],
+  ['Attendance', '94.8%'],
+  ['Classes', '42'],
+];
 
-import { signIn } from 'next-auth/react';
-import { FormEvent, useState } from 'react';
+const announcements = [
+  'Parent-teacher meeting scheduled for Friday at 4:00 PM.',
+  'Science fair submissions close next Monday.',
+  'Final exam timetable is now available.',
+];
 
-export default function LoginPage() {
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const quickActions = ['Add student', 'Add teacher', 'Mark attendance', 'Manage grades'];
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    const form = new FormData(event.currentTarget);
-    const email = String(form.get('email') || '');
-    const password = String(form.get('password') || '');
-
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    });
-
-    setIsLoading(false);
-
-    if (result?.error) {
-      setError('Invalid email or password. Try admin@school.com / school123');
-      return;
-    }
-
-    window.location.href = '/dashboard';
-  }
-
+export default function DashboardPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-slate-100">
-      <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-soft">
-        <p className="mb-2 text-sm uppercase tracking-[0.2em] text-cyan-400">School portal</p>
-        <h1 className="text-3xl font-bold text-white">Sign in</h1>
-        <p className="mt-2 text-sm text-slate-400">Access the admin dashboard and staff controls.</p>
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100">
+      <div className="mx-auto max-w-6xl">
+        <header className="mb-8 flex items-center justify-between rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-soft">
           <div>
-            <label className="mb-1 block text-sm text-slate-300">Email</label>
-            <input
-              name="email"
-              type="email"
-              defaultValue="admin@school.com"
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none ring-0 placeholder:text-slate-500"
-              placeholder="admin@school.com"
-              required
-            />
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-400">School dashboard</p>
+            <h1 className="mt-2 text-3xl font-bold text-white">Welcome back, Admin</h1>
+          </div>
+          <a href="/login" className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300">
+            Back to login
+          </a>
+        </header>
+
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {stats.map(([label, value]) => (
+            <div key={label} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-soft">
+              <p className="text-sm text-slate-400">{label}</p>
+              <h2 className="mt-3 text-3xl font-bold text-white">{value}</h2>
+            </div>
+          ))}
+        </section>
+
+        <section className="mt-8 grid gap-6 lg:grid-cols-2">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-soft">
+            <h3 className="mb-4 text-xl font-semibold text-white">Recent announcements</h3>
+            <ul className="space-y-3 text-sm text-slate-300">
+              {announcements.map((item) => (
+                <li key={item}>• {item}</li>
+              ))}
+            </ul>
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm text-slate-300">Password</label>
-            <input
-              name="password"
-              type="password"
-              defaultValue="school123"
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none ring-0 placeholder:text-slate-500"
-              placeholder="••••••••"
-              required
-            />
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-soft">
+            <h3 className="mb-4 text-xl font-semibold text-white">Quick actions</h3>
+            <div className="flex flex-wrap gap-3">
+              {quickActions.map((action) => (
+                <button key={action} className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-cyan-400">
+                  {action}
+                </button>
+              ))}
+            </div>
           </div>
-
-          {error ? <p className="text-sm text-rose-400">{error}</p> : null}
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-xl bg-cyan-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isLoading ? 'Signing in...' : 'Login'}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-xs text-slate-500">Demo credentials: admin@school.com / school123</p>
+        </section>
       </div>
     </main>
   );
