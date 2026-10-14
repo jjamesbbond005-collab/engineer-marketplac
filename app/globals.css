@@ -1,32 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+import './globals.css';
+import type { Metadata } from 'next';
 
-:root {
-  color-scheme: dark;
-}
+export const metadata: Metadata = {
+  title: 'School Management System',
+  description: 'Full stack school management platform with administration, grades, attendance, and communication tools.',
+};
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  @apply bg-slate-950 text-slate-100;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-.card {
-  @apply rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-soft;
-}
-
-.section-title {
-  @apply mb-4 text-xl font-semibold text-white;
-}
-
-.badge {
-  @apply inline-flex items-center rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-200;
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="bg-slate-950 text-slate-100 antialiased">{children}</body>
+    </html>
+  );
 }

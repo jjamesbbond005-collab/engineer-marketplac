@@ -1,81 +1,87 @@
-'use client';
+import Link from 'next/link';
 
-import { FormEvent, useState } from 'react';
-import { signIn } from 'next-auth/react';
+const metrics = [
+  { label: 'Students', value: '1,240' },
+  { label: 'Teachers', value: '96' },
+  { label: 'Attendance', value: '94.8%' },
+  { label: 'Classes', value: '42' },
+];
 
-export default function LoginPage() {
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const features = [
+  'Student and teacher management',
+  'Attendance and grade tracking',
+  'Announcements and school notices',
+  'Admin, teacher, and student views',
+  'Vercel-ready architecture',
+  'Supabase and Neon-ready database layer',
+];
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    const form = new FormData(event.currentTarget);
-    const email = String(form.get('email') || '');
-    const password = String(form.get('password') || '');
-
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    });
-
-    setIsLoading(false);
-
-    if (result?.error) {
-      setError('Invalid email or password. Try admin@school.com / school123');
-      return;
-    }
-
-    window.location.href = '/dashboard';
-  }
-
+export default function HomePage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-slate-100">
-      <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-soft">
-        <p className="mb-2 text-sm uppercase tracking-[0.2em] text-cyan-400">School portal</p>
-        <h1 className="text-3xl font-bold text-white">Sign in</h1>
-        <p className="mt-2 text-sm text-slate-400">Access the admin dashboard and school controls.</p>
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+    <main className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <header className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900/80 px-5 py-4 shadow-soft">
           <div>
-            <label className="mb-1 block text-sm text-slate-300">Email</label>
-            <input
-              name="email"
-              type="email"
-              defaultValue="admin@school.com"
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none placeholder:text-slate-500"
-              placeholder="admin@school.com"
-              required
-            />
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400">SchoolOps</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300">
+              Login
+            </Link>
+          </div>
+        </header>
+
+        <section className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+          <div>
+            <p className="mb-4 inline-flex rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-cyan-300">
+              School management system
+            </p>
+            <h1 className="max-w-xl text-4xl font-black leading-tight text-white md:text-6xl">
+              Modern systems for smarter schools.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg text-slate-300">
+              Manage students, teachers, attendance, grades, classes, and school communication from one intelligent dashboard.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link href="/login" className="rounded-xl bg-cyan-500 px-5 py-3 font-medium text-slate-950 transition hover:bg-cyan-400">
+                Open dashboard
+              </Link>
+              <Link href="/dashboard" className="rounded-xl border border-slate-700 px-5 py-3 font-medium text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300">
+                View demo dashboard
+              </Link>
+            </div>
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm text-slate-300">Password</label>
-            <input
-              name="password"
-              type="password"
-              defaultValue="school123"
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none placeholder:text-slate-500"
-              placeholder="••••••••"
-              required
-            />
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-soft">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {metrics.map((metric) => (
+                <div key={metric.label} className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                  <p className="text-sm text-slate-400">{metric.label}</p>
+                  <p className="mt-3 text-3xl font-bold text-white">{metric.value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <p className="text-sm text-slate-400">This week</p>
+              <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                <li>• 11 new student registrations</li>
+                <li>• Attendance improved by 4.2%</li>
+                <li>• 3 new academic announcements</li>
+              </ul>
+            </div>
           </div>
+        </section>
 
-          {error ? <p className="text-sm text-rose-400">{error}</p> : null}
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-xl bg-cyan-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isLoading ? 'Signing in...' : 'Login'}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-xs text-slate-500">Demo credentials: admin@school.com / school123</p>
+        <section className="mt-16 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-soft">
+          <h2 className="text-2xl font-bold text-white">Everything your school needs</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {features.map((feature) => (
+              <div key={feature} className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-slate-200">
+                {feature}
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );
